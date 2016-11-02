@@ -1,0 +1,10 @@
+box: python:3.5
+
+build:
+  steps:
+    - pip-install
+
+    - script:
+        name: flake8
+        code: |
+          flake8 --config flake8.cfg
