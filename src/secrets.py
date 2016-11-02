@@ -1,5 +1,3 @@
-import os
-
 secrets = {}
 
 # Read secrets from mountpoint in envs where the mount is expected

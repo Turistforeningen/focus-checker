@@ -6,15 +6,17 @@ import signal
 
 from secrets import secrets
 
+
 def main():
     host, port = secrets['DATABASES_FOCUS_HOST_TEST'].split(',')
-    connection_string = 'DRIVER={Freetds};SERVER=%s;PORT=%s;DATABASE=%s;UID=%s;PWD=%s' % (
-        host,
-        port,
-        secrets['DATABASES_FOCUS_NAME_PROD'],
-        secrets['DATABASES_FOCUS_USER_TEST'],
-        secrets['DATABASES_FOCUS_PASSWORD_TEST'],
-    )
+    connection_string = ';'.join([
+        'DRIVER={Freetds}',
+        'SERVER=%s' % host,
+        'PORT=%s' % port,
+        'DATABASE=%s' % secrets['DATABASES_FOCUS_NAME_PROD'],
+        'UID=%s' % secrets['DATABASES_FOCUS_USER_TEST'],
+        'PWD=%s' % secrets['DATABASES_FOCUS_PASSWORD_TEST'],
+    ])
 
     timeout = 5
     cache_time = 10
@@ -37,15 +39,21 @@ def main():
     connection_process.start()
     connection_process.join(timeout)
 
-    # If the connection attempt didn't finish, terminate it; it will get a non-zero exit code
+    # If the connection attempt didn't finish, terminate it; it will get a
+    # non-zero exit code
     if connection_process.is_alive():
-        # connection_process.terminate() sends SIGINT and pyodbc doesn't seem to respond to that while blocking. It
+        # connection_process.terminate() sends SIGINT and pyodbc doesn't seem to
+        # respond to that while blocking. It
         # does respond to SIGHUP, so send that.
         os.kill(connection_process.pid, signal.SIGHUP)
         connection_process.join()
 
     focus_available = connection_process.exitcode == 0
-    mc = pylibmc.Client(["memcached"], binary=True, behaviors={"tcp_nodelay": True, "ketama": True})
+    mc = pylibmc.Client(
+        ["memcached"],
+        binary=True,
+        behaviors={"tcp_nodelay": True, "ketama": True},
+    )
     mc.set("focus.connection", focus_available, time=cache_time)
 
 if __name__ == '__main__':
