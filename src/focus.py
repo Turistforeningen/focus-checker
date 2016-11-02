@@ -80,6 +80,7 @@ def main():
 if __name__ == '__main__':
     try:
         main()
+        raise Exception("Main loop finished unexpectedly")
     except Exception:
         raven.captureException()
         raise
