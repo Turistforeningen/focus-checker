@@ -1,0 +1,17 @@
+version: '2'
+services:
+  memcached:
+    image: memcached:1.4
+
+  app:
+    build: .
+    image: turistforeningen/focus-checker
+    volumes:
+      - .:/app
+    volumes_from:
+      - secrets
+
+  secrets:
+    image: turistforeningen/sherpa-secrets:v1
+    volumes:
+      - /secrets
