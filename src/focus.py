@@ -10,7 +10,7 @@ from secrets import secrets
 if 'DEVELOPMENT' in os.environ:
     raven = Client()
 else:
-    raven = Client(os.environ['SENTRY_DSN'])
+    raven = Client(secrets['SENTRY_DSN'])
 
 
 def main():
