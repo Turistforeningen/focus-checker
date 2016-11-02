@@ -2,10 +2,12 @@ import multiprocessing
 import os
 import pylibmc
 import pyodbc
+from raven import Client
 import signal
 
 from secrets import secrets
 
+raven = Client(os.environ['SENTRY_DSN'])
 
 def main():
     host, port = secrets['DATABASES_FOCUS_HOST_TEST'].split(',')
@@ -57,4 +59,7 @@ def main():
     mc.set("focus.connection", focus_available, time=cache_time)
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception:
+        raven.captureException()
