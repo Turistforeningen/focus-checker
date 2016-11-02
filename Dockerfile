@@ -17,8 +17,8 @@ RUN apk update && \
 COPY odbcinst.ini /etc
 
 RUN mkdir /app
-COPY . /app
 WORKDIR /app
+COPY . /app
 
 RUN pip3 install -r requirements.txt -r requirements-dev.txt
 
