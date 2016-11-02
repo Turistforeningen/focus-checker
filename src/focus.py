@@ -10,7 +10,7 @@ from secrets import secrets
 def main():
     host, port = secrets['DATABASES_FOCUS_HOST_TEST'].split(',')
     connection_string = ';'.join([
-        'DRIVER={Freetds}',
+        'DRIVER={FreeTDS}',
         'SERVER=%s' % host,
         'PORT=%s' % port,
         'DATABASE=%s' % secrets['DATABASES_FOCUS_NAME_PROD'],
