@@ -11,14 +11,14 @@ raven = Client(os.environ['SENTRY_DSN'])
 
 
 def main():
-    host, port = secrets['DATABASES_FOCUS_HOST_TEST'].split(',')
+    host, port = secrets['DATABASES_FOCUS_HOST_PROD'].split(',')
     connection_string = ';'.join([
         'DRIVER={FreeTDS}',
         'SERVER=%s' % host,
         'PORT=%s' % port,
         'DATABASE=%s' % secrets['DATABASES_FOCUS_NAME_PROD'],
-        'UID=%s' % secrets['DATABASES_FOCUS_USER_TEST'],
-        'PWD=%s' % secrets['DATABASES_FOCUS_PASSWORD_TEST'],
+        'UID=%s' % secrets['DATABASES_FOCUS_USER_PROD'],
+        'PWD=%s' % secrets['DATABASES_FOCUS_PASSWORD_PROD'],
     ])
 
     timeout = 5
