@@ -6,6 +6,7 @@ from raven import Client
 import signal
 import time
 
+from logger import logger
 from secrets import secrets
 
 if 'DEVELOPMENT' in os.environ:
@@ -29,6 +30,14 @@ def main():
     # the value of `check_interval` or `timeout`. In seconds.
     cache_time = 10
 
+    logger.info(
+        "initializing with check_interval=%s, timeout=%s, cache_time=%s" % (
+            check_interval,
+            timeout,
+            cache_time,
+        )
+    )
+
     host, port = secrets['DATABASES_FOCUS_HOST_PROD'].split(',')
     connection_string = ';'.join([
         'DRIVER={FreeTDS}',
@@ -44,6 +53,8 @@ def main():
         binary=True,
         behaviors={"tcp_nodelay": True, "ketama": True},
     )
+
+    logger.debug("memcached connection established")
 
     def attempt_connection():
         connection = pyodbc.connect(connection_string, timeout=timeout)
@@ -75,6 +86,7 @@ def main():
 
         focus_available = connection_process.exitcode == 0
         mc.set("focus.connection", focus_available, time=cache_time)
+        logger.debug("Focus is available: %s" % focus_available)
 
         time.sleep(check_interval)
 
