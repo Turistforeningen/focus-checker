@@ -39,6 +39,12 @@ def main():
         'PWD=%s' % secrets['DATABASES_FOCUS_PASSWORD_PROD'],
     ])
 
+    mc = pylibmc.Client(
+        ["memcached"],
+        binary=True,
+        behaviors={"tcp_nodelay": True, "ketama": True},
+    )
+
     def attempt_connection():
         connection = pyodbc.connect(connection_string, timeout=timeout)
         cursor = connection.cursor()
@@ -68,11 +74,6 @@ def main():
             connection_process.join()
 
         focus_available = connection_process.exitcode == 0
-        mc = pylibmc.Client(
-            ["memcached"],
-            binary=True,
-            behaviors={"tcp_nodelay": True, "ketama": True},
-        )
         mc.set("focus.connection", focus_available, time=cache_time)
 
         time.sleep(check_interval)
