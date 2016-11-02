@@ -2,7 +2,10 @@ box: python:3.5
 
 build:
   steps:
-    - pip-install
+    - script:
+      name: install dependencies
+      code: |
+        pip install -r requirements-dev.txt
 
     - script:
         name: flake8

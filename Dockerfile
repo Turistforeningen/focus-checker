@@ -20,6 +20,6 @@ RUN mkdir /app
 COPY . /app
 WORKDIR /app
 
-RUN pip3 install -r /app/requirements.txt
+RUN pip3 install -r requirements.txt -r requirements-dev.txt
 
 CMD ["python3", "src/focus.py"]
