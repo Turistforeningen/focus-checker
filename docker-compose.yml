@@ -12,6 +12,8 @@ services:
       - .:/app
     volumes_from:
       - secrets
+    environment:
+      DEVELOPMENT: "1"
 
   secrets:
     image: turistforeningen/focus-checker-secrets:v1

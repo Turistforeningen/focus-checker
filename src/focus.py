@@ -7,7 +7,10 @@ import signal
 
 from secrets import secrets
 
-raven = Client(os.environ['SENTRY_DSN'])
+if 'DEVELOPMENT' in os.environ:
+    raven = Client()
+else:
+    raven = Client(os.environ['SENTRY_DSN'])
 
 
 def main():
