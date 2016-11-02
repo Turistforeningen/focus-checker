@@ -29,24 +29,24 @@ def main():
     # the value of `check_interval` or `timeout`. In seconds.
     cache_time = 10
 
+    host, port = secrets['DATABASES_FOCUS_HOST_PROD'].split(',')
+    connection_string = ';'.join([
+        'DRIVER={FreeTDS}',
+        'SERVER=%s' % host,
+        'PORT=%s' % port,
+        'DATABASE=%s' % secrets['DATABASES_FOCUS_NAME_PROD'],
+        'UID=%s' % secrets['DATABASES_FOCUS_USER_PROD'],
+        'PWD=%s' % secrets['DATABASES_FOCUS_PASSWORD_PROD'],
+    ])
+
+    def attempt_connection():
+        connection = pyodbc.connect(connection_string, timeout=timeout)
+        cursor = connection.cursor()
+        cursor.execute('select @@version').fetchall()
+        cursor.close()
+        connection.close()
+
     while True:
-        host, port = secrets['DATABASES_FOCUS_HOST_PROD'].split(',')
-        connection_string = ';'.join([
-            'DRIVER={FreeTDS}',
-            'SERVER=%s' % host,
-            'PORT=%s' % port,
-            'DATABASE=%s' % secrets['DATABASES_FOCUS_NAME_PROD'],
-            'UID=%s' % secrets['DATABASES_FOCUS_USER_PROD'],
-            'PWD=%s' % secrets['DATABASES_FOCUS_PASSWORD_PROD'],
-        ])
-
-        def attempt_connection():
-            connection = pyodbc.connect(connection_string, timeout=timeout)
-            cursor = connection.cursor()
-            cursor.execute('select @@version').fetchall()
-            cursor.close()
-            connection.close()
-
         # Note that `timeout` argument will *not* ensure consistent timeouts for
         # any connection problem. It sets the ODBC API connection attribute
         # SQL_ATTR_LOGIN_TIMEOUT, but not SQL_ATTR_CONNECTION_TIMEOUT.
