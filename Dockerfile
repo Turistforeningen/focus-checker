@@ -6,12 +6,15 @@ RUN apk update && \
     apk add \
         python3 \
         python3-dev \
+        freetds \
         unixodbc-dev \
         memcached-dev \
         libmemcached-dev \
         cyrus-sasl-dev \
         zlib-dev \
         g++
+
+COPY odbcinst.ini /etc
 
 RUN mkdir /app
 COPY . /app
