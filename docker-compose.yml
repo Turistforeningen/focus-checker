@@ -6,6 +6,8 @@ services:
   app:
     build: .
     image: turistforeningen/focus-checker
+    depends_on:
+      - memcached
     volumes:
       - .:/app
     volumes_from:

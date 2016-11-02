@@ -1,5 +1,6 @@
 import multiprocessing
 import os
+import pylibmc
 import pyodbc
 import signal
 
@@ -16,6 +17,7 @@ def main():
     )
 
     timeout = 5
+    cache_time = 10
 
     def attempt_connection():
         connection = pyodbc.connect(connection_string, timeout=timeout)
@@ -39,6 +41,8 @@ def main():
         connection_process.join()
 
     focus_available = connection_process.exitcode == 0
+    mc = pylibmc.Client(["memcached"], binary=True, behaviors={"tcp_nodelay": True, "ketama": True})
+    mc.set("focus.connection", focus_available, time=cache_time)
 
 if __name__ == '__main__':
     main()
