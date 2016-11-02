@@ -20,7 +20,13 @@ def main():
     # to cause significant load on the database.
     check_interval = 1
 
+    # How long to wait for connection before timing out. Applies both to
+    # pyodbc's internal timeout mechanism and our own hard process cutoff
+    # timeout. In seconds.
     timeout = 5
+
+    # How long the stored value should be valid. Should never be shorter than
+    # the value of `check_interval` or `timeout`. In seconds.
     cache_time = 10
 
     while True:
