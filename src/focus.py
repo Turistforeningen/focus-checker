@@ -20,6 +20,9 @@ def main():
     # to cause significant load on the database.
     check_interval = 1
 
+    timeout = 5
+    cache_time = 10
+
     while True:
         host, port = secrets['DATABASES_FOCUS_HOST_PROD'].split(',')
         connection_string = ';'.join([
@@ -30,9 +33,6 @@ def main():
             'UID=%s' % secrets['DATABASES_FOCUS_USER_PROD'],
             'PWD=%s' % secrets['DATABASES_FOCUS_PASSWORD_PROD'],
         ])
-
-        timeout = 5
-        cache_time = 10
 
         def attempt_connection():
             connection = pyodbc.connect(connection_string, timeout=timeout)
