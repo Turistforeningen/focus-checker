@@ -14,6 +14,6 @@ services:
       - secrets
 
   secrets:
-    image: turistforeningen/sherpa-secrets:v1
+    image: turistforeningen/focus-checker-secrets:v1
     volumes:
       - /secrets
