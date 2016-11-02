@@ -26,9 +26,13 @@ def main():
         cursor.close()
         connection.close()
 
-    # Since the connection may hang indefinitely (see comment on 'connection_timeout' in Focus DB definition)
-    # perform the connection in a separate process. pyodbc acquires the GIL lock during connection, so signalling
-    # or threading wouldn't work here.
+    # Note that `timeout` argument will *not* ensure consistent timeouts for any
+    # connection problem. It sets the ODBC API connection attribute
+    # SQL_ATTR_LOGIN_TIMEOUT, but not SQL_ATTR_CONNECTION_TIMEOUT.
+    # See https://github.com/mkleehammer/pyodbc/issues/106
+    # Therefore, perform the connection in a separate process. pyodbc acquires
+    # the GIL lock during connection, so signalling or threading wouldn't work
+    # here.
     connection_process = multiprocessing.Process(target=attempt_connection)
     connection_process.start()
     connection_process.join(timeout)
