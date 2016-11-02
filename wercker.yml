@@ -11,3 +11,7 @@ build:
         name: flake8
         code: |
           flake8 --config flake8.cfg src
+
+  after-steps:
+      - turistforeningen/slack-notifier:
+          url: $SLACK_WEBHOOK_URL
