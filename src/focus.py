@@ -9,6 +9,7 @@ from secrets import secrets
 
 raven = Client(os.environ['SENTRY_DSN'])
 
+
 def main():
     host, port = secrets['DATABASES_FOCUS_HOST_TEST'].split(',')
     connection_string = ';'.join([
