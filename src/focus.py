@@ -63,6 +63,7 @@ def main():
         cursor.close()
         connection.close()
 
+    previous_availability = None
     while True:
         # Note that `timeout` argument will *not* ensure consistent timeouts for
         # any connection problem. It sets the ODBC API connection attribute
@@ -86,7 +87,10 @@ def main():
 
         focus_available = connection_process.exitcode == 0
         mc.set("focus.connection", focus_available, time=cache_time)
-        logger.debug("Focus is available: %s" % focus_available)
+
+        if previous_availability != focus_available:
+            logger.info("Focus availability changed to %s" % focus_available)
+            previous_availability = focus_available
 
         time.sleep(check_interval)
 
