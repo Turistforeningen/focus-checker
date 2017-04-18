@@ -10,7 +10,7 @@ build:
     - script:
         name: flake8
         code: |
-          flake8 --config flake8.cfg src
+          flake8 src
 
   after-steps:
       - turistforeningen/slack-notifier:
